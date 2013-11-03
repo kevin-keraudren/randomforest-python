@@ -19,30 +19,30 @@ Using one single tree:
 Axis aligned:    
 <img src="tree_AxisAligned.png" width="200">
 
-Linear:
+Linear:       
 <img src="tree_Linear.png" width="200">
 
-Conic:    
+Conic:          
 <img src="tree_Conic.png" width="200">
 
-Parabola:    
+Parabola:           
 <img src="tree_Parabola.png" width="200">
 
 
 Using a forest of 10 trees, with soft or hard decision boundaries:
 ``python example_forest.py``
 
-Axis aligned:    
-<img src="forest_AxisAligned_soft.png" width="200"> <img src="forest_AxisAligned_hard.png" width="200">
+Axis aligned:       
+<img src="forest_AxisAligned_soft.png" width="200"> &nbsp; <img src="forest_AxisAligned_hard.png" width="200">
 
-Linear:
-<img src="forest_Linear_soft.png" width="200"> <img src="forest_Linear_hard.png" width="200">
+Linear:       
+<img src="forest_Linear_soft.png" width="200"> &nbsp; <img src="forest_Linear_hard.png" width="200">
 
-Conic:    
-<img src="forest_Conic_soft.png" width="200"> <img src="forest_Conic_hard.png" width="200">
+Conic:         
+<img src="forest_Conic_soft.png" width="200"> &nbsp; <img src="forest_Conic_hard.png" width="200">
 
-Parabola:    
-<img src="forest_Parabola_soft.png" width="200"> <img src="forest_Parabola_hard.png" width="200">
+Parabola:         
+<img src="forest_Parabola_soft.png" width="200"> &nbsp; <img src="forest_Parabola_hard.png" width="200">
 
 Reference
 ---------
