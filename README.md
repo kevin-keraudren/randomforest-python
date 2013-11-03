@@ -29,7 +29,7 @@ Parabola:
 <img src="tree_Parabola.png" width="200">
 
 
-Using a forest of 10 trees, with soft or hard decision boundaries:
+Using a forest of 10 trees, with soft or hard decision boundaries:       
 ``python example_forest.py``
 
 Axis aligned:       
