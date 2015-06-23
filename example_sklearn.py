@@ -1,7 +1,10 @@
 #!/usr/bin/python
 
+import time
+start_time = time.time()
+
 import numpy as np
-import cv2 # OpenCV
+from PIL import Image
 
 from randomforest import *
 from randomforest import weakLearner
@@ -15,7 +18,7 @@ class FeatureExtractor(object):
         self.tests = []
 
     def fit_transform(self,points):
-        self.tests = self.learner.generate_all( points, self.n_features )
+        self.tests = self.learner.generate_all( points, np.random.RandomState(0), self.n_features )
         return self.apply_all(points)
 
     def apply(self,point):
@@ -26,7 +29,7 @@ class FeatureExtractor(object):
 
     
 def img_test(forest, feature_extractor, points, colors, filename, size=512, radius=3, soft=True):
-    img = np.zeros((512,512,3))
+    img = np.zeros((512,512,3), dtype='uint8')
     v_min = points.min()
     v_max = points.max()
     step = float(v_max - v_min)/img.shape[0]
@@ -46,12 +49,8 @@ def img_test(forest, feature_extractor, points, colors, filename, size=512, radi
             img[int((y-v_min)/step),
                 int((x-v_min)/step),:] = col
 
-    points = ((points - v_min)/step).astype('int')
-    for p,r in zip(points,responses):
-        cv2.circle(img, tuple(p), radius+1, (0,0,0), thickness=-1 )
-        cv2.circle(img, tuple(p), radius, colors[int(r)], thickness=-1 )
-
-    cv2.imwrite(filename,img)
+    img = Image.fromstring('RGB',img.shape[:2], img.tostring())
+    img.save(filename)
             
 
 t = np.arange(0,10,0.1)
@@ -71,18 +70,22 @@ for c in range(len(theta)):
 
 for learner in weakLearner.__all__:
     test_class = getattr( weakLearner, learner)()
-    params={ 'max_depth' : None,
-             'min_samples_split' : 2,
-             'n_estimators' : 100 }
+    params={ 'max_depth' : 10,
+             'min_samples_split' : 5,
+             'n_estimators' : 10,
+             'n_jobs' : 5 }
     
     forest = ensemble.RandomForestClassifier( **params )
     print points
-    feature_extractor = FeatureExtractor( test_class, n_features=1000 )
+    feature_extractor = FeatureExtractor( test_class, n_features=100 )
     features = feature_extractor.fit_transform(points)
     forest.fit( features, responses )
+    forest.set_params(n_jobs=1)
 
     for i in range(len(points)):
         print responses[i], forest.predict_proba(features[i])
 
     img_test( forest, feature_extractor, points, colors, 'forest_sklearn_'+str(learner)+'_soft.png',soft=True)
     img_test( forest, feature_extractor, points, colors, 'forest_sklearn_'+str(learner)+'_hard.png',soft=False)
+
+print("--- %s seconds ---" % (time.time() - start_time))

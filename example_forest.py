@@ -1,13 +1,16 @@
 #!/usr/bin/python
 
+import time
+start_time = time.time()
+
 import numpy as np
-import cv2 # OpenCV
+from PIL import Image
 
 from randomforest import *
 from randomforest import weakLearner
 
 def img_test(forest, points, colors, filename, size=512, radius=3, soft=True):
-    img = np.zeros((512,512,3))
+    img = np.zeros((512,512,3),dtype='uint8')
     v_min = points.min()
     v_max = points.max()
     step = float(v_max - v_min)/img.shape[0]
@@ -26,12 +29,8 @@ def img_test(forest, points, colors, filename, size=512, radius=3, soft=True):
             img[int((y-v_min)/step),
                 int((x-v_min)/step),:] = col
 
-    points = ((points - v_min)/step).astype('int')
-    for p,r in zip(points,responses):
-        cv2.circle(img, tuple(p), radius+1, (0,0,0), thickness=-1 )
-        cv2.circle(img, tuple(p), radius, colors[int(r)], thickness=-1 )
-
-    cv2.imwrite(filename,img)
+    img = Image.fromstring('RGB',img.shape[:2], img.tostring())
+    img.save(filename)
             
 
 t = np.arange(0,10,0.1)
@@ -64,3 +63,5 @@ for learner in weakLearner.__all__:
 
     img_test( forest, points, colors, 'forest_'+str(learner)+'_soft.png',soft=True)
     img_test( forest, points, colors, 'forest_'+str(learner)+'_hard.png',soft=False)       
+
+print("--- %s seconds ---" % (time.time() - start_time))

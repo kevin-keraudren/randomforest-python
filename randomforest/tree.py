@@ -149,7 +149,7 @@ class Tree:
         self.leaf = response
         return
     
-    def grow( self,points, responses, labels=None, depth=0 ):
+    def grow( self,points, random_state, responses, labels=None, depth=0 ):
         if labels is None:
             self.labels = []
             for r in responses:
@@ -173,9 +173,9 @@ class Tree:
              or len(points) <= self.params['min_sample_count']
              or H == 0 ):
             self.make_leaf( all_points )
-            return
+            return self
         
-        all_tests = self.params['test_class'].generate_all( points, self.params['test_count'] )
+        all_tests = self.params['test_class'].generate_all( points, random_state, self.params['test_count'] )
 
         H = self.entropy( all_points )
         print "Current entropy:", H
@@ -194,7 +194,7 @@ class Tree:
         if best_i is None:
             print "no best split found: creating a leaf"
             self.make_leaf( all_points )
-            return
+            return self
 
         self.test = all_tests[best_i]
         print "TEST:", self.test
@@ -212,10 +212,10 @@ class Tree:
         self.left= Tree(self.params)
         self.right=Tree(self.params)
 
-        self.left.grow( np.array(left_points), left_responses, self.labels, depth+1)
-        self.right.grow( np.array(right_points), right_responses, self.labels, depth+1)
+        self.left.grow( np.array(left_points), random_state, left_responses, self.labels, depth+1)
+        self.right.grow( np.array(right_points), random_state, right_responses, self.labels, depth+1)
 
-        return
+        return self
 
     def predict(self,point):
         if self.leaf is not None:

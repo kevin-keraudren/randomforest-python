@@ -6,8 +6,13 @@ import os
 from glob import glob
 import shutil
 
+from joblib import Parallel, delayed
+
 from weakLearner import WeakLearner, AxisAligned
 
+def _grow( tree, random_state, points, responses, labels ):
+    return tree.grow( points, random_state, responses, labels )
+    
 class Forest:
     def __init__( self,
                   ntrees=20,
@@ -27,10 +32,12 @@ class Forest:
         for r in responses:
             if r not in self.labels:
                 self.labels.append(r)
-        for i in range(self.ntrees):
-            self.trees.append( Tree( self.tree_params ) )
-            self.trees[i].grow( points, responses, self.labels )
-
+        #for i in range(self.ntrees):
+            #self.trees.append( Tree( self.tree_params ) )
+            #self.trees[i].grow( points, responses, self.labels )
+        self.trees = Parallel(n_jobs=-1)(delayed(_grow)(Tree( self.tree_params
+        ), np.random.RandomState(i), points, responses, self.labels) for i in range(self.ntrees))
+            
     def predict(self, point, soft=False):
         r = {}
         for c in self.labels:

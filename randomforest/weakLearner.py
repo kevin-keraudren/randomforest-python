@@ -6,7 +6,7 @@ __all__ = [ "AxisAligned",
             "Parabola" ]
 
 class WeakLearner:
-    def generate_all(self, points, count ):
+    def generate_all(self, points, random_state, count ):
         return None
 
     def __str__(self):
@@ -20,7 +20,7 @@ class AxisAligned(WeakLearner):
     def __str__(self):
         return "AxisAligned"
 
-    def generate_all(self, points, count ):
+    def generate_all(self, points, random_state, count ):
         x_min = points.min(0)[0]
         y_min = points.min(0)[1]
         x_max = points.max(0)[0]
@@ -28,8 +28,8 @@ class AxisAligned(WeakLearner):
         tests = []
         print tests
         print  x_min,x_max,count
-        tests.extend( zip(np.zeros(count,dtype=int), np.random.uniform(x_min,x_max,count)))
-        tests.extend( zip(np.ones(count,dtype=int), np.random.uniform(y_min,y_max,count)))
+        tests.extend( zip(np.zeros(count,dtype=int), random_state.uniform(x_min,x_max,count)))
+        tests.extend( zip(np.ones(count,dtype=int), random_state.uniform(y_min,y_max,count)))
         return tests
 
     def run(self, point, test):
@@ -40,7 +40,7 @@ class Linear(WeakLearner):
     def __str__(self):
         return "Linear"
     
-    def generate_all(self, points, count ):
+    def generate_all(self, points, random_state, count ):
         x_min = points.min(0)[0]
         y_min = points.min(0)[1]
         x_max = points.max(0)[0]
@@ -48,9 +48,9 @@ class Linear(WeakLearner):
         tests = []
         print tests
         print  x_min,x_max,count
-        tests.extend( zip(np.random.uniform(x_min,x_max,count),
-                          np.random.uniform(y_min,y_max,count),
-                          np.random.uniform(0,360,count)))
+        tests.extend( zip(random_state.uniform(x_min,x_max,count),
+                          random_state.uniform(y_min,y_max,count),
+                          random_state.uniform(0,360,count)))
         return tests
 
     def run(self, point, test):
@@ -63,21 +63,21 @@ class Conic(WeakLearner):
     def __str__(self):
         return "Conic"
     
-    def generate_all(self, points, count ):
+    def generate_all(self, points, random_state, count ):
         x_min = points.min(0)[0]
         y_min = points.min(0)[1]
         x_max = points.max(0)[0]
         y_max = points.max(0)[1]
         scale = max( points.max(),abs(points.min()) )
         tests = []
-        tests.extend( zip( np.random.uniform(x_min,x_max,count),
-                           np.random.uniform(y_min,y_max,count),
-                           np.random.uniform(-scale,scale,count)*np.random.random_integers(0,1,count),
-                           np.random.uniform(-scale,scale,count)*np.random.random_integers(0,1,count),
-                           np.random.uniform(-scale,scale,count)*np.random.random_integers(0,1,count),
-                           np.random.uniform(-scale,scale,count)*np.random.random_integers(0,1,count),
-                           np.random.uniform(-scale,scale,count)*np.random.random_integers(0,1,count),
-                           np.random.uniform(-scale,scale,count)*np.random.random_integers(0,1,count)
+        tests.extend( zip( random_state.uniform(x_min,x_max,count),
+                           random_state.uniform(y_min,y_max,count),
+                           random_state.uniform(-scale,scale,count)*random_state.random_integers(0,1,count),
+                           random_state.uniform(-scale,scale,count)*random_state.random_integers(0,1,count),
+                           random_state.uniform(-scale,scale,count)*random_state.random_integers(0,1,count),
+                           random_state.uniform(-scale,scale,count)*random_state.random_integers(0,1,count),
+                           random_state.uniform(-scale,scale,count)*random_state.random_integers(0,1,count),
+                           random_state.uniform(-scale,scale,count)*random_state.random_integers(0,1,count)
                            )
                       )
         
@@ -94,17 +94,17 @@ class Parabola(WeakLearner):
     def __str__(self):
         return "Parabola"
     
-    def generate_all(self, points, count ):
+    def generate_all(self, points, random_state, count ):
         x_min = points.min(0)[0]
         y_min = points.min(0)[1]
         x_max = points.max(0)[0]
         y_max = points.max(0)[1]
         scale = abs( points.max()-points.min() )
         tests = []
-        tests.extend( zip( np.random.uniform(2*x_min,2*x_max,count),
-                           np.random.uniform(2*y_min,2*y_max,count),
-                           np.random.uniform(-scale,scale,count),
-                           np.random.random_integers(0,1,count)
+        tests.extend( zip( random_state.uniform(2*x_min,2*x_max,count),
+                           random_state.uniform(2*y_min,2*y_max,count),
+                           random_state.uniform(-scale,scale,count),
+                           random_state.random_integers(0,1,count)
                            )
                       )
         
