@@ -22,6 +22,7 @@ def img_test( tree, points, colors, filename, size=512, radius=3):
             img[int((y-v_min)/step),
                 int((x-v_min)/step),:] = colors[label]
 
+    #img = Image.fromarray(img)
     img = Image.fromstring('RGB',img.shape[:2], img.tostring())
     img.save(filename)
 
@@ -48,7 +49,7 @@ for learner in weakLearner.__all__:
              'test_class' : getattr( weakLearner, learner)() }
     
     tree = Tree( params )
-    tree.grow( points, responses )
+    tree.grow( points, np.random.RandomState(0), responses )
 
     for i in range(len(points)):
         print responses[i], tree.predict(points[i])
