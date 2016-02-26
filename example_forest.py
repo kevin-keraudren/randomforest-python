@@ -58,6 +58,11 @@ for learner in weakLearner.__all__:
     forest = Forest( 10, params )
     print points
     forest.grow( points, responses )
+    
+    # save forest to a directory of text files
+    forest.save('saved_model')
+    forest = Forest()
+    forest.load('saved_model', test=params['test_class'])
 
     for i in range(len(points)):
         print responses[i], forest.predict(points[i], soft=True)

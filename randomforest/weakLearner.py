@@ -33,7 +33,7 @@ class AxisAligned(WeakLearner):
         return tests
 
     def run(self, point, test):
-        return point[test[0]] > test[1]
+        return point[int(test[0])] > test[1]
 
 class Linear(WeakLearner):
     """Linear"""

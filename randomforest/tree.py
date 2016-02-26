@@ -61,7 +61,7 @@ class Tree:
 
         # save labels
         for i in range(len(self.labels)):
-            file_buffer[1] += str(self.labels[i])
+            file_buffer[1] += str(int(self.labels[i]))
             if i < len(self.labels)-1:
                 file_buffer[1] += '\t'
 
@@ -97,11 +97,10 @@ class Tree:
         
         # read params
         params = lines[0].split('\t')
-        #self.params = dict( zip( params[::2], params[1::2]) )
-        self.params['max_depth'] = int(params[0])
-        self.params['min_sample_count'] = int(params[1])
-        self.params['test_count'] = int(params[2])
-        self.params['test_class'] = params[3]
+        self.params = dict( zip( params[::2], params[1::2]) )
+        self.params['max_depth'] = int(self.params['max_depth'])
+        self.params['min_sample_count'] = int(self.params['min_sample_count'])
+        self.params['test_count'] = int(self.params['test_count'])
 
         assert self.params['test_class'] == str(test), "expected %s, got %s" % (
             self.params['test_class'],
@@ -110,9 +109,9 @@ class Tree:
         self.params['test_class'] = test
 
         # read labels
-        self.labels = map( float, lines[1].split('\t') )
+        self.labels = map( int, lines[1].split('\t') )
         
-        self.load_node(0,lines[2:])
+        self.load_node(2,lines)
         
         return
 

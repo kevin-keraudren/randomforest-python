@@ -50,6 +50,11 @@ for learner in weakLearner.__all__:
     
     tree = Tree( params )
     tree.grow( points, responses )
+    
+    # save tree to a text file
+    tree.save('tree.txt')
+    tree = Tree()
+    tree.load('tree.txt', test=params['test_class'])
 
     for i in range(len(points)):
         print responses[i], tree.predict(points[i])
