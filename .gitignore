@@ -68,3 +68,6 @@ auto/
 
 # emacs
 *~
+
+# Mac OS X
+.DS_Store
