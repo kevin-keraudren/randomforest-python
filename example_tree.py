@@ -59,7 +59,7 @@ for learner in weakLearner.__all__:
     for i in range(len(points)):
         print responses[i], tree.predict(points[i])
 
-    img_test( tree, points, colors, 'tree_'+str(learner)+'.png' )
+    img_test( tree, points, colors, 'img/tree_'+str(learner)+'.png' )
 
 
 

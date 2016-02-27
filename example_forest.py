@@ -67,5 +67,5 @@ for learner in weakLearner.__all__:
     for i in range(len(points)):
         print responses[i], forest.predict(points[i], soft=True)
 
-    img_test( forest, points, colors, 'forest_'+str(learner)+'_soft.png',soft=True)
-    img_test( forest, points, colors, 'forest_'+str(learner)+'_hard.png',soft=False)       
+    img_test( forest, points, colors, 'img/forest_'+str(learner)+'_soft.png',soft=True)
+    img_test( forest, points, colors, 'img/forest_'+str(learner)+'_hard.png',soft=False)       
