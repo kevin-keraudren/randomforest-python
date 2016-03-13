@@ -1,9 +1,14 @@
-from tree import Tree
-from forest import Forest
-from weakLearner import *
+from .classification_tree import ClassificationTree
+from .classification_forest import ClassificationForest
+from .regression_tree import RegressionTree
+from .regression_forest import RegressionForest
+from .weakLearner import *
 
-__all__ = [ "Tree",
-           "Forest" ]
+__all__ = ["ClassificationTree",
+           "ClassificationForest",
+           "RegressionTree",
+           "RegressionForest"]
 
-import weakLearner
-__all__.extend( weakLearner.__all__ )
+from . import weakLearner
+
+__all__.extend(weakLearner.__all__)
