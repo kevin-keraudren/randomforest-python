@@ -34,10 +34,14 @@ class AxisAligned(WeakLearner):
                          uniform(x_min, x_max, count)))
         tests.extend(zip(np.ones(count, dtype=int),
                          uniform(y_min, y_max, count)))
-        return tests
+        return np.array(tests)
 
     def run(self, point, test):
         return point[int(test[0])] > test[1]
+
+    def run_all(self, points, test):
+        return np.array(list(map(lambda test: points[:, test[0]] > test[1],
+                                 test))).T
 
 
 class Linear(WeakLearner):
@@ -61,6 +65,14 @@ class Linear(WeakLearner):
         theta = test[2] * np.pi / 180
         return (np.cos(theta) * (point[0] - test[0]) +
                 np.sin(theta) * (point[1] - test[1])) > 0
+
+    def run_all(self, points, tests):
+        def _run(test):
+            theta = test[2] * np.pi / 180
+            return (np.cos(theta) * (points[:, 0] - test[0]) +
+                    np.sin(theta) * (points[:, 1] - test[1])) > 0
+
+        return np.array(list(map(_run, tests))).T
 
 
 class Conic(WeakLearner):
@@ -99,6 +111,15 @@ class Conic(WeakLearner):
         A, B, C, D, E, F = test[2:]
         return (A * x * x + B * y * y + C * x * x + D * x + E * y + F) > 0
 
+    def run_all(self, points, tests):
+        def _run(test):
+            x = (points[:, 0] - test[0])
+            y = (points[:, 1] - test[1])
+            A, B, C, D, E, F = test[2:]
+            return (A * x * x + B * y * y + C * x * x + D * x + E * y + F) > 0
+
+        return np.array(list(map(_run, tests))).T
+
 
 class Parabola(WeakLearner):
     """Non-linear: parabola"""
@@ -128,3 +149,33 @@ class Parabola(WeakLearner):
             return x * x < p * y
         else:
             return y * y < p * x
+
+    def run_all(self, points, tests):
+        def _run(test):
+            x = (points[:, 0] - test[0])
+            y = (points[:, 1] - test[1])
+            p, axis = test[2:]
+            if axis == 0:
+                return x * x < p * y
+            else:
+                return y * y < p * x
+
+        return np.array(list(map(_run, tests))).T
+
+
+class FeatureExtractor(object):
+    def __init__(self, learner, n_features):
+        self.learner = learner
+        self.n_features = n_features
+        self.tests = []
+
+    def fit_transform(self, points):
+        self.tests = self.learner.generate_all(points, self.n_features)
+        return self.apply_all(points)
+
+    def apply(self, point):
+        return np.array(list(map(lambda t: self.learner.run(point, t),
+                                 self.tests)))
+
+    def apply_all(self, points):
+        return self.learner.run_all(points, self.tests)
